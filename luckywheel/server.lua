@@ -19,7 +19,7 @@ if configFile then
 end
 
 local playerCooldowns = {} -- Store player cooldowns by their identifier
-local cooldown = Config.Cooldown or 1800000 -- Default to 30 minutes if not set
+local cooldown = Config.Cooldown or 3600000 -- Default to 60 minutes if not set
 
 local prizes = Config.Prizes
 

@@ -18,6 +18,25 @@ end
 
 local prizes = Config.Prizes
 
+
+local fakeWheelModel = "prop_casino_roulette_01" -- Replace with the actual model name of the fake wheel
+local fakeWheelCoords = vector4(1111.147217, 229.292313, -49.644653, 180.0) -- Replace with the desired coordinates and heading
+local fakeWheelOffset = vector3(0.0, 0.0, 0.0) -- Offset the fake wheel slightly
+
+Citizen.CreateThread(function()
+    -- Load the fake wheel model
+    RequestModel(fakeWheelModel)
+    while not HasModelLoaded(fakeWheelModel) do
+        Citizen.Wait(0)
+    end
+
+    -- Create the fake wheel entity
+    local fakeWheel = CreateObject(fakeWheelModel, fakeWheelCoords.x + fakeWheelOffset.x, fakeWheelCoords.y + fakeWheelOffset.y, fakeWheelCoords.z + fakeWheelOffset.z, false, false, false)
+    SetEntityHeading(fakeWheel, fakeWheelCoords.w) -- Set the heading
+    FreezeEntityPosition(fakeWheel, true) -- Prevent the fake wheel from moving
+end)
+
+
 -- Listen for the server response to the cooldown request
 RegisterNetEvent('luckywheel:receiveCooldown')
 AddEventHandler('luckywheel:receiveCooldown', function(remainingTime)
