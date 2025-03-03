@@ -12,9 +12,9 @@ Config.Prizes = {
     {name = "$3,000", money = 3000, weight = 28},
     {name = "$2,000", money = 2000, weight = 36},
     {name = "$1,000", money = 1000, weight = 45},
-    {name = "Bagged Cocaine", money = 0, item = "coke_pooch", minQuantity = 50, maxQuantity = 1000, weight = 55},
-    {name = "Amfetamine Pooch", money = 0, item = "amfe_pooch", minQuantity = 50, maxQuantity = 1000, weight = 65},
-    {name = "Marijuana", money = 0, item = "marijuana", minQuantity = 50, maxQuantity = 1000, weight = 75},
-    {name = "Mystery Cash Prize", money = 0, minMoney = 10000, maxMoney = 500000, weight = 85}
+    {name = "Bagged Cocaine", money = 0, item = "coke_pooch", minQuantity = 50, maxQuantity = 1000, weight = 7},
+    {name = "Amfetamine Pooch", money = 0, item = "amfe_pooch", minQuantity = 50, maxQuantity = 1000, weight = 5},
+    {name = "Marijuana", money = 0, item = "marijuana", minQuantity = 50, maxQuantity = 1000, weight = 4},
+    {name = "Mystery Cash Prize", money = 0, minMoney = 10000, maxMoney = 500000, weight = 2}
 
 }
