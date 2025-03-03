@@ -21,7 +21,7 @@ server_scripts {
 }
 
 files {
-    'sounds/wheelspin.mp3'
+    'sounds/wheelspin.wav'
 }
 
 data_file 'AUDIO_WAVEPACK' 'sounds'
