@@ -121,9 +121,9 @@ function DrawTextOnScreen(text, x, y)
 end
 
 Citizen.CreateThread(function()
-    local blip = AddBlipForCoord(1111.147217, 229.292313, -49.644653) -- Wheel location
+    local blip = AddBlipForCoord(1111.147217, 229.292313, -49.644653)
 
-    SetBlipSprite(blip, 681) -- Set the blip icon (679 is the casino icon, change if needed)
+    SetBlipSprite(blip, 681)
     SetBlipDisplay(blip, 4)
     SetBlipScale(blip, 1.0)
     SetBlipColour(blip, 5)
