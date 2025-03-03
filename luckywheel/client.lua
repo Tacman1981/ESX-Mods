@@ -51,16 +51,24 @@ end)
 RegisterNetEvent('luckywheel:playSound')
 AddEventHandler('luckywheel:playSound', function()
     local soundId = GetSoundId()
-    print("Playing sound with ID: " .. soundId) -- Debug message
-    PlaySoundFromEntity(soundId, "Spin_Start", _wheel, 'dlc_vw_casino_lucky_wheel_sounds', 1, 1)
-    
-    -- Stop the spinning sound after a delay
-    Citizen.Wait(5000) -- Adjust the delay as needed
-    StopSound(soundId)
-    ReleaseSoundId(soundId)
+    if soundId ~= -1 then
+        print("Playing sound with ID: " .. soundId) -- Debug message
+
+        -- Play the sound
+        PlaySoundFromEntity(soundId, "Spin_Start", PlayerPedId(), 'dlc_vw_casino_lucky_wheel_sounds', 1, 1)
+
+        -- Use a coroutine to stop the sound after a delay without blocking the main thread
+        Citizen.CreateThread(function()
+            Citizen.Wait(5000) -- Adjust the delay as needed
+            StopSound(soundId)
+            ReleaseSoundId(soundId)
+            print("Sound stopped and sound ID released.") -- Debug message
+        end)
+    else
+        print("Failed to get a valid sound ID.") -- Debug message
+    end
 end)
 
--- filepath: /E:/repos/ESX-Mods/luckywheel/client.lua
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0) -- Wait 1 second between checks
