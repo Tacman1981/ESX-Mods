@@ -35,7 +35,6 @@ AddEventHandler('luckywheel:getCooldown', function()
     local currentTime = os.time() * 1000
     local remainingTime = math.max(0, lastSpin + cooldown - currentTime)
 
-    -- Send the remaining cooldown time to the client
     TriggerClientEvent('luckywheel:receiveCooldown', src, remainingTime)
 end)
 
