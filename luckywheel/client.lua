@@ -61,7 +61,7 @@ Citizen.CreateThread(function()
             -- Throttle cooldown requests to once every 5 seconds
             local currentTime = GetGameTimer()
             if currentTime - lastCooldownRequest >= 1000 then
-                print("Requesting cooldown...") -- Debug message
+                --print("Requesting cooldown...")
                 TriggerServerEvent('luckywheel:getCooldown')
                 lastCooldownRequest = currentTime
             end
@@ -71,7 +71,8 @@ Citizen.CreateThread(function()
                 DrawTextOnScreen("Press ~g~E~s~ to spin the Lucky Wheel", 0.5, 0.9)
 
                 if IsControlJustReleased(0, 38) then -- E key
-                    print("E key pressed! Attempting to spin the wheel...") -- Debug message
+                    Citizen.Wait(5000) -- Wait 5 seconds before spinning
+                    --print("E key pressed! Attempting to spin the wheel...")
                     TriggerServerEvent('luckywheel:spin') -- Notify the server of the spin
                 end
             else
