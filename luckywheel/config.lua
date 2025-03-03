@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Cooldown = 5000
+Config.Cooldown = 1800000 -- Cooldown duration in milliseconds (30 minutes)
 
 Config.Prizes = {
     {name = "$50,000", money = 50000, weight = 1},
@@ -12,8 +12,9 @@ Config.Prizes = {
     {name = "$3,000", money = 3000, weight = 15},
     {name = "$2,000", money = 2000, weight = 20},
     {name = "$1,000", money = 1000, weight = 25},
-    {name = "Bagged Cocaine", money = 0, item = "coke_pooch", minQuantity = 50, maxQuantity = 1000, weight = 30},  -- Random quantity range
-    {name = "Amfetamine Pooch", money = 0, item = "amfe_pooch", minQuantity = 50, maxQuantity = 1000, weight = 30},  -- Random quantity range
-    {name = "Marijuana", money = 0, item = "marijuana", minQuantity = 50, maxQuantity = 1000, weight = 30},  -- Random quantity range
-    {name = "Mystery Prize", money = 0, weight = 3}
+    {name = "Bagged Cocaine", money = 0, item = "coke_pooch", minQuantity = 50, maxQuantity = 1000, weight = 10},
+    {name = "Amfetamine Pooch", money = 0, item = "amfe_pooch", minQuantity = 50, maxQuantity = 1000, weight = 10},
+    {name = "Marijuana", money = 0, item = "marijuana", minQuantity = 50, maxQuantity = 1000, weight = 10},
+    {name = "Mystery Cash Prize", money = 0, minMoney = 10000, maxMoney = 500000, weight = 5}
+
 }

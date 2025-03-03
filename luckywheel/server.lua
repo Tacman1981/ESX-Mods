@@ -68,9 +68,9 @@ AddEventHandler('luckywheel:spin', function()
             end
         end
 
-        -- If the prize is a "Mystery Prize", generate the money dynamically
-        if prize.name == "Mystery Prize" then
-            prize.money = math.random(1000, 50000)
+        -- If the prize is a "Mystery Cash Prize", generate the money dynamically
+        if prize.name == "Mystery Cash Prize" then
+            prize.money = math.random(prize.minMoney, prize.maxMoney)
         end
 
         -- Handle the case for random quantities of items

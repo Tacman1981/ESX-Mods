@@ -4,7 +4,7 @@ game 'gta5'
 author 'Tacman'
 version '0.1'
 name 'TimeDisplay'
-description 'A kind of "psuedo" wheel for spinning, in the casino'
+description 'A kind of "psuedo" wheel for spinning, in the casino (WIP)'
 lua54 'no'
 
 shared_scripts {
