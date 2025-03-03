@@ -1,51 +1,39 @@
 local wheelSpinning = false
-local lastSpinTime = 0 -- Timestamp of the last spin
-local cooldown = 1800000
 local lastCooldownRequest = 0 -- Timestamp of the last cooldown request
 local isNearWheel = false -- Track if the player is near the wheel
+local remainingCooldown = 0 -- Store the remaining cooldown time
 
-local prizes = {
-    {name = "$50,000", money = 50000},
-    {name = "$20,000", money = 20000},
-    {name = "$15,000", money = 15000},
-    {name = "$10,000", money = 10000},
-    {name = "$7,500", money = 7500},
-    {name = "$5,000", money = 5000},
-    {name = "$5,000", money = 5000}, -- Duplicate for more chances
-    {name = "$3,000", money = 3000},
-    {name = "$3,000", money = 3000}, -- Duplicate for more chances
-    {name = "$2,000", money = 2000},
-    {name = "$1,000", money = 1000},
-    {name = "$1,000", money = 1000}, -- Duplicate for more chances
-    {name = "Bagged Cocaine", money = 0, item = "coke_pooch", minQuantity = 1, maxQuantity = 10},  -- Random quantity range
-    {name = "Amfetamine Pooch", money = 0, item = "amfe_pooch", minQuantity = 1, maxQuantity = 10},  -- Random quantity range
-    {name = "Marijuana", money = 0, item = "marijuana", minQuantity = 1, maxQuantity = 10},  -- Random quantity range
-    {name = "Mystery Prize", money = 0},  -- Set initial money to 0, dynamically set later
-    {name = "Nothing", money = 0}
-}
+-- Load the configuration file
+Config = {}
+Config.Prizes = {}
+
+local configFile = LoadResourceFile(GetCurrentResourceName(), "config.lua")
+if configFile then
+    local configFunc = load(configFile)
+    if configFunc then
+        configFunc()
+        Config = _G.Config
+    end
+end
+
+local prizes = Config.Prizes
 
 -- Listen for the server response to the cooldown request
 RegisterNetEvent('luckywheel:receiveCooldown')
 AddEventHandler('luckywheel:receiveCooldown', function(remainingTime)
-    if remainingTime <= 0 then
-        -- No cooldown left, the player can spin
-        lastSpinTime = 0
-    else
-        -- Set the last spin time and calculate the remaining cooldown
-        lastSpinTime = GetGameTimer() + remainingTime
-    end
+    remainingCooldown = remainingTime
 end)
 
 -- Listen for the server response to the spin event
 RegisterNetEvent('luckywheel:spinConfirmed')
-AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, prizeItem)
+AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, prizeItem, prizeQuantity)
     -- Check if prize is money or item, and display accordingly
     if prizeName then
         local message = "You won: " .. prizeName
         if prizeMoney and prizeMoney > 0 then
             message = message .. " (" .. prizeMoney .. " cash)"
         elseif prizeItem then
-            message = message .. " (" .. prizeItem .. ")"
+            message = message .. " (" .. prizeQuantity .. "x " .. prizeItem .. ")"
         end
 
         -- Show a notification or chat message
@@ -71,14 +59,14 @@ Citizen.CreateThread(function()
 
             -- Throttle cooldown requests to once every 5 seconds
             local currentTime = GetGameTimer()
-            if currentTime - lastCooldownRequest >= 5000 then
+            if currentTime - lastCooldownRequest >= 1000 then
                 print("Requesting cooldown...") -- Debug message
                 TriggerServerEvent('luckywheel:getCooldown')
                 lastCooldownRequest = currentTime
             end
 
             -- If the cooldown has passed, allow the player to spin
-            if lastSpinTime == 0 or GetGameTimer() - lastSpinTime >= cooldown then
+            if remainingCooldown <= 0 then
                 DrawTextOnScreen("Press ~g~E~s~ to spin the Lucky Wheel", 0.5, 0.9)
 
                 if IsControlJustReleased(0, 38) then -- E key
@@ -87,8 +75,7 @@ Citizen.CreateThread(function()
                 end
             else
                 -- Show the remaining cooldown time
-                local remainingTime = cooldown - (GetGameTimer() - lastSpinTime)
-                local secondsLeft = math.ceil(remainingTime / 1000)
+                local secondsLeft = math.ceil(remainingCooldown / 1000)
                 DrawTextOnScreen("You can spin the wheel again in: ~y~" .. secondsLeft .. " seconds", 0.5, 0.9)
             end
         else
