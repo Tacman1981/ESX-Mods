@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Cooldown = 1800000 -- Cooldown on wheel spin in milliseconds (30 minutes)
+Config.Cooldown = 1800000 -- Cooldown on wheel spin in milliseconds (default 30 minutes)
 
 Config.Prizes = {
     {name = "$50,000", money = 50000, weight = 1},

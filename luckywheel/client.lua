@@ -1,9 +1,8 @@
 local wheelSpinning = false
-local lastCooldownRequest = 0 -- Timestamp of the last cooldown request
-local isNearWheel = false -- Track if the player is near the wheel
-local remainingCooldown = 0 -- Store the remaining cooldown time
+local lastCooldownRequest = 0
+local isNearWheel = false
+local remainingCooldown = 0
 
--- Load the configuration file
 Config = {}
 Config.Prizes = {}
 
@@ -18,16 +17,13 @@ end
 
 local prizes = Config.Prizes
 
--- Listen for the server response to the cooldown request
 RegisterNetEvent('luckywheel:receiveCooldown')
 AddEventHandler('luckywheel:receiveCooldown', function(remainingTime)
     remainingCooldown = remainingTime
 end)
 
--- Listen for the server response to the spin event
 RegisterNetEvent('luckywheel:spinConfirmed')
 AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, prizeItem, prizeQuantity)
-    -- Check if prize is money or item, and display accordingly
     if prizeName then
         local message = "You won: " .. prizeName
         if prizeMoney and prizeMoney > 0 then
@@ -36,7 +32,6 @@ AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, priz
             message = message .. " (" .. prizeQuantity .. "x " .. prizeItem .. ")"
         end
 
-        -- Show a notification or chat message
         TriggerEvent('chat:addMessage', {
             color = {0, 255, 0},
             multiline = true,
@@ -44,7 +39,6 @@ AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, priz
         })
     end
 
-    -- Reset the wheel spinning state
     wheelSpinning = false
 end)
 
@@ -52,20 +46,19 @@ RegisterNetEvent('luckywheel:playSound')
 AddEventHandler('luckywheel:playSound', function()
     local soundId = GetSoundId()
     if soundId ~= -1 then
-        print("Playing sound with ID: " .. soundId) -- Debug message
+        --print("Playing sound with ID: " .. soundId)
 
         -- Play the sound
         PlaySoundFromEntity(soundId, "Spin_Start", PlayerPedId(), 'dlc_vw_casino_lucky_wheel_sounds', 1, 1)
 
-        -- Use a coroutine to stop the sound after a delay without blocking the main thread
         Citizen.CreateThread(function()
-            Citizen.Wait(5000) -- Adjust the delay as needed
+            Citizen.Wait(10000)
             StopSound(soundId)
             ReleaseSoundId(soundId)
-            print("Sound stopped and sound ID released.") -- Debug message
+            --print("Sound stopped and sound ID released.")
         end)
     else
-        print("Failed to get a valid sound ID.") -- Debug message
+        --print("Failed to get a valid sound ID.")
     end
 end)
 
@@ -75,13 +68,12 @@ Citizen.CreateThread(function()
 
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
-        local wheelCoords = vector3(1111.147217, 229.292313, -49.644653) -- Wheel location
+        local wheelCoords = vector3(1111.147217, 229.292313, -49.644653)
 
         local distance = #(playerCoords - wheelCoords)
         if distance < 2.0 and not wheelSpinning then
             isNearWheel = true
 
-            -- Throttle cooldown requests to once every 5 seconds
             local currentTime = GetGameTimer()
             if currentTime - lastCooldownRequest >= 1000 then
                 --print("Requesting cooldown...")
@@ -89,21 +81,18 @@ Citizen.CreateThread(function()
                 lastCooldownRequest = currentTime
             end
 
-            -- If the cooldown has passed, allow the player to spin
             if remainingCooldown <= 0 then
                 DrawTextOnScreen("Press ~g~E~s~ to spin the Lucky Wheel", 0.5, 0.9)
 
                 if IsControlJustReleased(0, 38) then -- E key
-                    print("E key pressed! Attempting to spin the wheel...") -- Debug message
+                    --print("E key pressed! Attempting to spin the wheel...") -- Debug message
                     wheelSpinning = true
 
-                    -- Trigger the client event to play the sound
                     TriggerEvent('luckywheel:playSound')
 
-                    -- Delay before notifying the server
-                    Citizen.Wait(5000) -- 2 seconds delay for spinning effect
+                    Citizen.Wait(10000)
 
-                    TriggerServerEvent('luckywheel:spin') -- Notify the server of the spin
+                    TriggerServerEvent('luckywheel:spin')
                 end
             else
                 -- Show the remaining cooldown time
@@ -112,21 +101,19 @@ Citizen.CreateThread(function()
             end
         else
             isNearWheel = false
-            -- Clear the text if the player is not near the wheel
             DrawTextOnScreen("", 0.5, 0.9)
         end
     end
 end)
 
--- Function to draw text on the screen
 function DrawTextOnScreen(text, x, y)
-    SetTextFont(4) -- Change font if needed
+    SetTextFont(4)
     SetTextProportional(1)
     SetTextScale(0.4, 0.4)
-    SetTextColour(255, 255, 255, 255) -- White color
+    SetTextColour(255, 255, 255, 255)
     SetTextJustification(1)
     SetTextCentre(true)
-    SetTextOutline() -- Add outline for better visibility
+    SetTextOutline()
 
     BeginTextCommandDisplayText("STRING")
     AddTextComponentString(text)

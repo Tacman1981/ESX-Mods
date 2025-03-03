@@ -20,8 +20,4 @@ server_scripts {
     'config.lua',
 }
 
-files {
-    'sounds/wheelspin.mp3'
-}
-
 data_file 'AUDIO_WAVEPACK' 'sounds'
