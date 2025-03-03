@@ -18,7 +18,6 @@ end
 
 local prizes = Config.Prizes
 
-
 -- Listen for the server response to the cooldown request
 RegisterNetEvent('luckywheel:receiveCooldown')
 AddEventHandler('luckywheel:receiveCooldown', function(remainingTime)
@@ -28,6 +27,10 @@ end)
 -- Listen for the server response to the spin event
 RegisterNetEvent('luckywheel:spinConfirmed')
 AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, prizeItem, prizeQuantity)
+    -- Stop the spinning sound
+    StopSound(spinSoundId)
+    ReleaseSoundId(spinSoundId)
+
     -- Check if prize is money or item, and display accordingly
     if prizeName then
         local message = "You won: " .. prizeName
@@ -44,6 +47,9 @@ AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, priz
             args = {"Lucky Wheel", message}
         })
     end
+
+    -- Reset the wheel spinning state
+    wheelSpinning = false
 end)
 
 Citizen.CreateThread(function()
@@ -71,8 +77,16 @@ Citizen.CreateThread(function()
                 DrawTextOnScreen("Press ~g~E~s~ to spin the Lucky Wheel", 0.5, 0.9)
 
                 if IsControlJustReleased(0, 38) then -- E key
-                    Citizen.Wait(5000) -- Wait 5 seconds before spinning
-                    --print("E key pressed! Attempting to spin the wheel...")
+                    print("E key pressed! Attempting to spin the wheel...") -- Debug message
+                    wheelSpinning = true
+
+                    -- Play the spinning sound
+                    spinSoundId = GetSoundId()
+                    PlaySoundFromEntity(spinSoundId, "wheelspin", playerPed, "sounds", false, 0)
+
+                    -- Delay before notifying the server
+                    Citizen.Wait(2000) -- 2 seconds delay for spinning effect
+
                     TriggerServerEvent('luckywheel:spin') -- Notify the server of the spin
                 end
             else
