@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Cooldown = 1800000 -- Cooldown duration in milliseconds (30 minutes)
+Config.Cooldown = 1800000 -- Cooldown on wheel spin in milliseconds (30 minutes)
 
 Config.Prizes = {
     {name = "$50,000", money = 50000, weight = 1},
@@ -16,5 +16,4 @@ Config.Prizes = {
     {name = "Amfetamine Pooch", money = 0, item = "amfe_pooch", minQuantity = 50, maxQuantity = 1000, weight = 5},
     {name = "Marijuana", money = 0, item = "marijuana", minQuantity = 50, maxQuantity = 1000, weight = 4},
     {name = "Mystery Cash Prize", money = 0, minMoney = 10000, maxMoney = 500000, weight = 2}
-
 }

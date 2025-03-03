@@ -48,6 +48,19 @@ AddEventHandler('luckywheel:spinConfirmed', function(prizeName, prizeMoney, priz
     wheelSpinning = false
 end)
 
+RegisterNetEvent('luckywheel:playSound')
+AddEventHandler('luckywheel:playSound', function()
+    local soundId = GetSoundId()
+    print("Playing sound with ID: " .. soundId) -- Debug message
+    PlaySoundFromEntity(soundId, "Spin_Start", _wheel, 'dlc_vw_casino_lucky_wheel_sounds', 1, 1)
+    
+    -- Stop the spinning sound after a delay
+    Citizen.Wait(5000) -- Adjust the delay as needed
+    StopSound(soundId)
+    ReleaseSoundId(soundId)
+end)
+
+-- filepath: /E:/repos/ESX-Mods/luckywheel/client.lua
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0) -- Wait 1 second between checks
@@ -76,19 +89,13 @@ Citizen.CreateThread(function()
                     print("E key pressed! Attempting to spin the wheel...") -- Debug message
                     wheelSpinning = true
 
-                    -- Play the spinning sound
-                    local soundId = GetSoundId()
-                    print("Playing sound with ID: " .. soundId) -- Debug message
-                    PlaySoundFromEntity(soundId, "wheelspin", playerPed, "sounds", false, 5)
+                    -- Trigger the client event to play the sound
+                    TriggerEvent('luckywheel:playSound')
 
                     -- Delay before notifying the server
-                    Citizen.Wait(2000) -- 2 seconds delay for spinning effect
+                    Citizen.Wait(5000) -- 2 seconds delay for spinning effect
 
                     TriggerServerEvent('luckywheel:spin') -- Notify the server of the spin
-
-                    -- Stop the spinning sound after the delay
-                    StopSound(soundId)
-                    ReleaseSoundId(soundId)
                 end
             else
                 -- Show the remaining cooldown time
